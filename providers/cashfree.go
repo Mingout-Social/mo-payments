@@ -4,18 +4,25 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	payments "github.com/Mingout-Social/mo-payments"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
 
+	"github.com/Mingout-Social/mo-payments/responses"
+
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func CreateCashFreeOrder(amount int64, orderId primitive.ObjectID, userId primitive.ObjectID, mobileNo string, emailId string) (payments.OrderResponse, error) {
-	var order payments.OrderResponse
+const (
+	Success = "SUCCESS"
+	Failed  = "FAILED"
+	Pending = "PENDING"
+)
+
+func CreateCashFreeOrder(amount int64, orderId primitive.ObjectID, userId primitive.ObjectID, mobileNo string, emailId string) (responses.OrderResponse, error) {
+	var order responses.OrderResponse
 	amount = amount / 100
 
 	body, err := json.Marshal(map[string]interface{}{
@@ -86,9 +93,9 @@ func CreateCashFreeOrder(amount int64, orderId primitive.ObjectID, userId primit
 	return order, nil
 }
 
-func VerifyPaymentOrder(orderId string) (payments.VerifyPaymentResponse, error) {
+func VerifyPaymentOrder(orderId string) (responses.VerifyPaymentResponse, error) {
 
-	var verifyPaymentResponse payments.VerifyPaymentResponse
+	var verifyPaymentResponse responses.VerifyPaymentResponse
 	var body io.Reader
 
 	url := os.Getenv("CASHFREE_BASE_URI") + "/orders/" + orderId + "/payments"
@@ -127,13 +134,13 @@ func VerifyPaymentOrder(orderId string) (payments.VerifyPaymentResponse, error) 
 		return verifyPaymentResponse, err
 	}
 
-	verifyPaymentResponse.Status = string(payments.Failed)
+	verifyPaymentResponse.Status = string(Failed)
 	verifyPaymentResponse.OrderId = orderId
 
 	for i := range cashFreeResponse {
 		verifyPaymentResponse.PaymentId = fmt.Sprintf("%f", (cashFreeResponse[i]["cf_payment_id"]).(float64))
-		if (cashFreeResponse[i]["payment_status"]).(string) == string(payments.Success) {
-			verifyPaymentResponse.Status = string(payments.Success)
+		if (cashFreeResponse[i]["payment_status"]).(string) == string(Success) {
+			verifyPaymentResponse.Status = string(Success)
 			break
 		}
 	}
