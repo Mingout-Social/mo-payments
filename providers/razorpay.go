@@ -1,11 +1,12 @@
 package providers
 
 import (
-	payments "github.com/Mingout-Social/mo-payments"
+	"os"
+
+	"github.com/Mingout-Social/mo-payments/responses"
 	"github.com/mitchellh/mapstructure"
 	"github.com/razorpay/razorpay-go"
 	"github.com/sirupsen/logrus"
-	"os"
 )
 
 const (
@@ -23,8 +24,8 @@ func getClient() *razorpay.Client {
 	return razorpay.NewClient(key, secret)
 }
 
-func CreateRazorpayOrder(amount int64) (payments.OrderResponse, error) {
-	var order payments.OrderResponse
+func CreateRazorpayOrder(amount int64) (responses.OrderResponse, error) {
+	var order responses.OrderResponse
 
 	payload := map[string]interface{}{
 		"amount":          amount,
