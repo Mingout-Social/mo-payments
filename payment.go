@@ -66,7 +66,7 @@ func GenerateOrder(orderAmount int64, userId primitive.ObjectID, mobileNumber st
 		paymentDetail = PaymentDetail{
 			ID:       orderId,
 			OrderID:  order.ID,
-			Amount:   order.Amount,
+			Amount:   order.Amount * 100,
 			Status:   Pending,
 			Provider: provider,
 		}
