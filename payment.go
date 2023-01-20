@@ -2,7 +2,9 @@ package payments
 
 import (
 	"errors"
+
 	"github.com/Mingout-Social/mo-payments/providers"
+	"github.com/Mingout-Social/mo-payments/responses"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -17,22 +19,6 @@ const (
 	Pending PaymentStatus = "PENDING"
 )
 
-type OrderResponse struct {
-	ID         string
-	Entity     string
-	Amount     int64
-	AmountPaid int
-	AmountDue  int64
-	Currency   string
-	Status     string
-}
-
-type VerifyPaymentResponse struct {
-	OrderId   string
-	PaymentId string
-	Status    string
-}
-
 type PaymentDetail struct {
 	ID        primitive.ObjectID `bson:"id" json:"id"`
 	OrderID   string             `bson:"order_id" json:"order_id"`
@@ -43,7 +29,7 @@ type PaymentDetail struct {
 }
 
 func GenerateOrder(orderAmount int64, userId primitive.ObjectID, mobileNumber string, email string, provider string) (PaymentDetail, error) {
-	var order OrderResponse
+	var order responses.OrderResponse
 	var err error
 	var paymentDetail PaymentDetail
 
@@ -75,8 +61,8 @@ func GenerateOrder(orderAmount int64, userId primitive.ObjectID, mobileNumber st
 	return paymentDetail, err
 }
 
-func VerifyPayment(orderId string, provider string) (VerifyPaymentResponse, error) {
-	var verifyPaymentResponse VerifyPaymentResponse
+func VerifyPayment(orderId string, provider string) (responses.VerifyPaymentResponse, error) {
+	var verifyPaymentResponse responses.VerifyPaymentResponse
 
 	if provider != ProviderCashfree {
 		return verifyPaymentResponse, nil
