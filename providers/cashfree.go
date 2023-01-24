@@ -21,9 +21,8 @@ const (
 	Pending = "PENDING"
 )
 
-func CreateCashFreeOrder(amount int64, orderId primitive.ObjectID, userId primitive.ObjectID, mobileNo string, emailId string) (responses.OrderResponse, error) {
+func CreateCashFreeOrder(amount float32, orderId primitive.ObjectID, userId primitive.ObjectID, mobileNo string, emailId string) (responses.OrderResponse, error) {
 	var order responses.OrderResponse
-	amount = amount / 100
 
 	body, err := json.Marshal(map[string]interface{}{
 		"order_id":       orderId.Hex(),
