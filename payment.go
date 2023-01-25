@@ -48,7 +48,7 @@ func GenerateOrder(orderAmount int64, userId primitive.ObjectID, mobileNumber st
 		}
 	} else if provider == ProviderCashfree {
 		orderId := primitive.NewObjectID()
-		amountINR := float32(orderAmount / 100)
+		amountINR := float32(orderAmount) / 100
 		order, err = providers.CreateCashFreeOrder(amountINR, orderId, userId, mobileNumber, email)
 		paymentDetail = PaymentDetail{
 			ID:       orderId,
