@@ -24,14 +24,16 @@ func getClient() *razorpay.Client {
 	return razorpay.NewClient(key, secret)
 }
 
-func CreateRazorpayOrder(amount int64) (responses.OrderResponse, error) {
+func CreateRazorpayOrder(amount int64, entity string) (responses.OrderResponse, error) {
 	var order responses.OrderResponse
 
 	payload := map[string]interface{}{
 		"amount":          amount,
 		"currency":        "INR",
 		"partial_payment": false,
-		"notes":           map[string]interface{}{},
+		"notes": map[string]interface{}{
+			"entity": entity,
+		},
 	}
 
 	client := getClient()
