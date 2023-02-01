@@ -28,7 +28,7 @@ type PaymentDetail struct {
 	Provider  string             `bson:"provider" json:"provider"`
 }
 
-func GenerateOrder(orderAmount int64, userId primitive.ObjectID, mobileNumber string, email string, provider string) (PaymentDetail, error) {
+func GenerateOrder(orderAmount int64, userId primitive.ObjectID, mobileNumber string, email string, provider string, entity string) (PaymentDetail, error) {
 	var order responses.OrderResponse
 	var err error
 	var paymentDetail PaymentDetail
@@ -38,7 +38,7 @@ func GenerateOrder(orderAmount int64, userId primitive.ObjectID, mobileNumber st
 	}
 
 	if provider == ProviderRazorpay {
-		order, err = providers.CreateRazorpayOrder(orderAmount)
+		order, err = providers.CreateRazorpayOrder(orderAmount, entity)
 		paymentDetail = PaymentDetail{
 			ID:       primitive.NewObjectID(),
 			OrderID:  order.ID,
